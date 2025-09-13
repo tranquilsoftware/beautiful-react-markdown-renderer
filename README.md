@@ -101,7 +101,7 @@ draft: false
 ### 1. Images with Captions
 
 ```markdown
-<img src="https://i.imgur.com/CdnTZ20.png" alt="Tranquil Software" />
+<img src="https://placehold.co/600x400/png" alt="Tranquil Software" />
 ```
 
 **Features:**
@@ -326,7 +326,7 @@ const { metadata, content } = parseMarkdownWithFrontmatter(markdown);
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. Free forever. Tranquil Software certified. ❤️
+Free forever. Tranquil Software certified. ❤️
 
 ## 🙏 Acknowledgments
 
@@ -336,4 +336,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Made with ❤️ for beautiful markdown rendering by Tranquil Software**
+**Made with ❤️ for beautiful markdown rendering by [Tranquil Software](https://tranquilsoftware.com.au)**
