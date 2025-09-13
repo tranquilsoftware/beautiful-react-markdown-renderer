@@ -1,8 +1,7 @@
 import React from 'react';
 import { useMarkdown } from '../context/MarkdownContext';
 import { textColors, cn } from '../../../styles/colors';
-
-const TABLE_OF_CONTENTS_HIGHLIGHT_HEADING_DELAY = 50;
+import { TABLE_OF_CONTENTS_HIGHLIGHT_HEADING_DELAY } from '../../../globals';
 
 const TableOfContents: React.FC = () => {
 
