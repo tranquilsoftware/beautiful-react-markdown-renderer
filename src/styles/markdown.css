@@ -1,14 +1,55 @@
-/* Markdown styling with Tailwind @apply directives */
+/* Markdown styling - Tailwind v4 compatible */
+@import 'katex/dist/katex.min.css';
 
+/* Heading styles */
 .reactMarkDown h1,
 .reactMarkDown h2,
 .reactMarkDown h3,
 .reactMarkDown h4,
 .reactMarkDown h5,
 .reactMarkDown h6 {
-  @apply font-bold pt-4 text-blue-700 dark:text-blue-400 !important;
+  padding-top: 1rem;
+  color: rgb(29 78 216); /* blue-700 */
+  font-weight: bold !important;
 }
 
+:is(.dark .reactMarkDown h1),
+:is(.dark .reactMarkDown h2),
+:is(.dark .reactMarkDown h3),
+:is(.dark .reactMarkDown h4),
+:is(.dark .reactMarkDown h5),
+:is(.dark .reactMarkDown h6) {
+  color: rgb(96 165 250); /* blue-400 */
+}
+
+/* Paragraph spacing */
 .reactMarkDown p {
-  @apply py-1;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+/* Math rendering styles */
+/* uses: remark-math, rehype-katex katex --save-dev @types/katex --- For LaTeX math rendering */
+.katex-display {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.katex {
+  font-size: 1.1em;
+}
+
+.katex-display > .katex {
+  display: block;
+  text-align: center;
+}
+
+/* Dark mode math support */
+:is(.dark .katex) {
+  color: #e5e7eb;
+}
+
+:is(.dark .katex .mord) {
+  color: #e5e7eb;
 }

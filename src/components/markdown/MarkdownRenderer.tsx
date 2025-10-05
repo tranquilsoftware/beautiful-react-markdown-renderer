@@ -16,6 +16,10 @@ import 'highlight.js/styles/github-dark.css';
 
 // colours headings based on tailwind config and light/dark mode
 import '../../styles/markdown.css';
+import MermaidDiagram from './components/MermaidDiagram';
+import Math from './components/Math';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 
 export interface MarkdownRendererProps {
   content: string;
@@ -23,6 +27,7 @@ export interface MarkdownRendererProps {
   contentAlignment?: 'left' | 'center' | 'right';
   headingAlignment?: 'left' | 'center' | 'right';
   showToc?: boolean;
+  enableMath?: boolean;
 }
 
 // Modular markdown styling interface
@@ -59,13 +64,20 @@ export class MarkdownStylingConfig {
   }
 }
 
-const MarkdownContent: React.FC<{ content: string; className?: string }> = ({ content, className }) => {
+const MarkdownContent: React.FC<{ content: string; className?: string; enableMath?: boolean }> = ({ content, className, enableMath }) => {
   const styles = MarkdownStylingConfig.getStyles();
   return (
     <div className={`${styles.className} markdown ${className}`}>
       <ReactMarkdown
-        rehypePlugins={[rehypeRaw, rehypeHighlight]}
-        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[
+          rehypeRaw, 
+          rehypeHighlight,
+          ...(enableMath ? [rehypeKatex] : [])
+        ]}
+        remarkPlugins={[
+          remarkGfm,
+          ...(enableMath ? [remarkMath] : [])
+        ]}
         components={{
           ...Headings(),
           ...Text(),
@@ -73,6 +85,8 @@ const MarkdownContent: React.FC<{ content: string; className?: string }> = ({ co
           ...CodeBlock(),
           ...Table(),
           ...Media(),
+          ...MermaidDiagram(),
+          ...Math(),
         }}
       >
         {content}
@@ -81,7 +95,7 @@ const MarkdownContent: React.FC<{ content: string; className?: string }> = ({ co
   );
 };
 
-const MarkdownContentWrapper: React.FC<{ content: string; className?: string; showToc?: boolean }> = ({ content, className, showToc }) => {
+const MarkdownContentWrapper: React.FC<{ content: string; className?: string; showToc?: boolean; enableMath?: boolean }> = ({ content, className, showToc, enableMath }) => {
   const { hasEnoughSpaceForToc } = useMarkdown();
   const shouldShowToc = showToc && hasEnoughSpaceForToc;
 
@@ -90,7 +104,6 @@ const MarkdownContentWrapper: React.FC<{ content: string; className?: string; sh
 
   return (
     <div className="relative w-full">
-      {/* <ReadMeter /> */}
       <div className="max-w-4xl mx-auto px-4 relative">
         {shouldShowToc && (
           <div className="hidden lg:block absolute right-full pr-8 w-64 top-0 h-full">
@@ -100,7 +113,11 @@ const MarkdownContentWrapper: React.FC<{ content: string; className?: string; sh
           </div>
         )}
         <div className="w-full">
-          <MarkdownContent content={content} className={className} />
+          <MarkdownContent
+          content={content}
+          className={className}
+          enableMath={enableMath}
+          />
         </div>
       </div>
     </div>
@@ -113,6 +130,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   contentAlignment = 'left',
   headingAlignment = 'left',
   showToc = true,
+  enableMath = true,
 }) => {
   return (
     <MarkdownProvider
@@ -120,7 +138,12 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       headingAlignment={headingAlignment}
       showToc={showToc}
     >
-      <MarkdownContentWrapper content={content} className={className} showToc={showToc} />
+      <MarkdownContentWrapper
+        content={content}
+        className={className}
+        showToc={showToc}
+        enableMath={enableMath}
+      />
     </MarkdownProvider>
   );
 };

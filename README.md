@@ -6,11 +6,14 @@ A powerful, feature-rich React component specifically designed to create **beaut
 
 - **📝 YAML Frontmatter Support**: Extract SEO metadata directly from markdown files
 - **🖼️ Rich Media Components**: Custom markdown syntax for images, videos, galleries, and iframes
+- **📊 Mermaid Diagrams**: Beautiful flowcharts and diagrams with SVG rendering
+- **🔢 LaTeX Math Support**: Inline and block math equations with KaTeX
 - **🎯 Table of Contents**: Auto-generated navigation with smooth scrolling
 - **🌙 Dark/Light Theme**: Built-in theme switching with system preference detection
 - **📱 Responsive Design**: Mobile-first design with Tailwind CSS
 - **⚡ Performance Optimised**: Efficient rendering with React hooks and context
 - **🎨 Customisable**: Easy to extend with custom components and styling
+- **🎨 Tailwind CSS v4**: Modern styling with Tailwind CSS v4
 
 ## 🚀 Quick Start
 
@@ -23,6 +26,9 @@ cd beautiful-react-markdown-renderer
 
 # Install dependencies
 npm install
+
+# Install math and diagram support
+npm install remark-math rehype-katex katex
 
 # Start development server
 npm run dev
@@ -46,6 +52,24 @@ tags: ["markdown", "react", "blog"]
 
 This is a **beautiful** markdown renderer with custom components!
 
+## Math Support
+
+Inline math: $E = mc^2$
+
+Block math:
+$$
+\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}
+$$
+
+## Mermaid Diagrams
+
+\`\`\`mermaid
+graph TD
+    A[Start] --> B[Process]
+    B --> C[Decision]
+    C --> D[End]
+\`\`\`
+
 <img src="https://example.com/image.jpg" alt="Example image" />
 
 <youtube id="dQw4w9WgXcQ" title="Example Video" />
@@ -53,7 +77,11 @@ This is a **beautiful** markdown renderer with custom components!
 
 function App() {
   return (
-    <MarkdownRenderer content={markdownContent} showToc={true} />
+    <MarkdownRenderer 
+      content={markdownContent} 
+      showToc={true}
+      enableMath={true}
+    />
   );
 }
 ```
@@ -95,6 +123,67 @@ draft: false
 | `image` | String | Featured image URL |
 | `featured` | Boolean | Whether to feature this post |
 | `draft` | Boolean | Whether this is a draft |
+
+## 🔢 Math Rendering
+
+### Inline Math
+
+Use single dollar signs for inline equations:
+
+```markdown
+Einstein's famous equation: $E = mc^2$
+
+The quadratic formula: $x = \frac{-b \pm \sqrt{b^2-4ac}}{2a}$
+```
+
+### Block Math
+
+Use double dollar signs for display equations:
+
+```markdown
+$$
+\sum_{i=1}^{n} i = \frac{n(n+1)}{2}
+$$
+
+$$
+\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
+$$
+```
+
+**Features:**
+- Powered by KaTeX for fast, beautiful rendering
+- Supports full LaTeX math syntax
+- Dark mode compatible
+- Responsive and mobile-friendly
+- Custom styled containers with gradient backgrounds
+
+## 📊 Mermaid Diagrams
+
+Create beautiful flowcharts and diagrams using Mermaid syntax:
+
+```markdown
+\`\`\`mermaid
+graph TD
+    A[Start] --> B[Process Data]
+    B --> C{Decision}
+    C -->|Yes| D[Execute]
+    C -->|No| E[Skip]
+    D --> F[End]
+    E --> F
+\`\`\`
+```
+
+**Supported Formats:**
+- Flowcharts (graph TD, graph LR)
+- More diagram types render with fallback styling
+
+**Features:**
+- Custom SVG rendering with beautiful gradients
+- Interactive hover effects
+- Dark mode support
+- Curved connectors with arrows
+- Node labels and connection labels
+- Responsive layout
 
 ## 🎨 Custom Markdown Components
 
@@ -193,7 +282,9 @@ MarkdownRenderer (Main entry point)
 │       ├── Lists (ul, ol, li)
 │       ├── CodeBlock (syntax highlighting)
 │       ├── Table (responsive tables)
-│       └── Media (custom components)
+│       ├── Media (custom components)
+│       ├── MermaidDiagram (flowchart rendering)
+│       └── Math (LaTeX equation rendering)
 └── ThemeContext (Dark/Light mode)
 ```
 
@@ -203,6 +294,8 @@ MarkdownRenderer (Main entry point)
 - **useToc.ts**: Hook for table of contents functionality
 - **markdownParser.ts**: Parses YAML frontmatter and extracts metadata
 - **SEO.tsx**: Handles meta tags and SEO optimization
+- **MermaidDiagram.tsx**: Custom SVG flowchart renderer
+- **Math.tsx**: LaTeX math equation renderer with KaTeX
 
 ## 🔄 Data Flow
 
@@ -217,7 +310,11 @@ BlogPost.tsx (wraps with ReadMeter)
     ↓
 MarkdownRenderer.tsx (renders markdown)
     ↓
-Individual Components (Headings, Text, Lists, etc.)
+Remark Plugins (remarkGfm, remarkMath)
+    ↓
+Rehype Plugins (rehypeRaw, rehypeHighlight, rehypeKatex)
+    ↓
+Individual Components (Headings, Text, Lists, Math, Mermaid, etc.)
     ↓
 Final Rendered HTML + CSS + Theme
 ```
@@ -255,7 +352,9 @@ src/
 │   │   │   ├── Lists.tsx
 │   │   │   ├── CodeBlock.tsx
 │   │   │   ├── Table.tsx
-│   │   │   └── Media.tsx
+│   │   │   ├── Media.tsx
+│   │   │   ├── MermaidDiagram.tsx
+│   │   │   └── Math.tsx
 │   │   ├── context/
 │   │   │   └── ThemeContext.tsx
 │   │   ├── hooks/
@@ -273,6 +372,15 @@ src/
 ```
 
 ## 🛠️ Development
+
+### Installation
+
+To enable math support in your markdown, install the following dependencies:
+
+```bash
+npm install remark-math rehype-katex katex
+npm install --save-dev @types/katex
+```
 
 ### Project Structure
 
@@ -303,6 +411,7 @@ beautiful-react-markdown-renderer/
 | `content` | String | "" | Markdown content to render |
 | `showToc` | Boolean | false | Whether to show table of contents |
 | `className` | String | "" | Additional CSS classes |
+| `enableMath` | Boolean | true | Enable LaTeX math rendering |
 
 ### useToc Hook
 
@@ -315,6 +424,17 @@ const { registerHeading, activeHeading } = useToc();
 ```typescript
 const { metadata, content } = parseMarkdownWithFrontmatter(markdown);
 ```
+
+## 🔌 Plugins & Dependencies
+
+### Remark Plugins (Markdown Processing)
+- **remarkGfm**: GitHub Flavored Markdown (tables, strikethrough, etc.)
+- **remarkMath**: Parses LaTeX math syntax ($...$ and $$...$$)
+
+### Rehype Plugins (HTML Processing)
+- **rehypeRaw**: Allows raw HTML in markdown
+- **rehypeHighlight**: Syntax highlighting for code blocks
+- **rehypeKatex**: Renders LaTeX math equations with KaTeX
 
 ## 🤝 Contributing
 
@@ -333,6 +453,8 @@ Free forever. Tranquil Software certified. ❤️
 - Built with [React](https://reactjs.org/)
 - Styled with [Tailwind CSS](https://tailwindcss.com/)
 - Markdown parsing with [ReactMarkdown](https://github.com/remarkjs/react-markdown)
+- Math rendering with [KaTeX](https://katex.org/)
+- Diagram support inspired by [Mermaid](https://mermaid.js.org/)
 
 ---
 

@@ -42,6 +42,19 @@ int main() {
 }
 ```
 
+## Mermaid Diagram
+
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
+
+### Math Example
+
+$$E = mc^2$$
 
 ## Sample Data Table
 
