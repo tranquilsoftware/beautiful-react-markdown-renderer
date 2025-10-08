@@ -1,5 +1,4 @@
 import React, { createContext, useContext, ReactNode, useEffect } from 'react';
-import { MIN_PC_WIDTH } from '../../../globals';
 
 type Alignment = 'left' | 'center' | 'right';
 
@@ -22,7 +21,6 @@ interface MarkdownProviderProps {
   headingAlignment?: Alignment;
   showToc?: boolean;
 }
-
 
 // TODO magic number 1440, ew need ti more dynamic, having trouble rn
 export const MarkdownProvider: React.FC<MarkdownProviderProps> = ({
@@ -62,12 +60,12 @@ export const MarkdownProvider: React.FC<MarkdownProviderProps> = ({
 
   useEffect(() => {
     const handleResize = () => {
-      setHasEnoughSpaceForToc(window.innerWidth > MIN_PC_WIDTH);
+      setHasEnoughSpaceForToc(window.innerWidth > 1440);
     };
     window.addEventListener('resize', handleResize);
     handleResize();
 
-    console.log('hasEnoughSpaceForToc', hasEnoughSpaceForToc);
+    // console.log('hasEnoughSpaceForToc', hasEnoughSpaceForToc);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 

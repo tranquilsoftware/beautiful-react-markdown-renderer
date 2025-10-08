@@ -10,7 +10,6 @@ interface CodeProps extends React.HTMLAttributes<HTMLElement> {
 export default function CodeBlock() {
   return {
     code: ({
-      node,
       inline,
       className = '',
       children,
@@ -19,10 +18,20 @@ export default function CodeBlock() {
       const match = /language-(\w+)/.exec(className || '');
       const language = match ? match[1] : '';
       
-      // Force inline rendering when inline prop is true
-      if (inline) {
+      // Explicit check: if inline prop exists and is true, OR if there's no language AND no pre parent
+      // Triple backticks will be wrapped in <pre>, single backticks won't
+      const isInline = inline === true || (inline !== false && !language && !className);
+      
+      // Single backticks = inline code
+      if (isInline && typeof children === 'string' && !children.includes('\n')) {
         return (
-          <code className={cn('px-1 py-0.5 rounded text-sm inline', 'bg-gray-200 dark:bg-gray-700')} {...props}>
+          <code 
+            className={cn(
+              'px-1 py-0.5 rounded text-sm font-mono',
+              bgColors.dark, textColors.light
+            )}
+            {...props}
+          >
             {children}
           </code>
         );
