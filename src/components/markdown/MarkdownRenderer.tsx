@@ -1,9 +1,17 @@
 import React from 'react';
+
+// for markdown
 import ReactMarkdown from 'react-markdown';
+
+// for markdown context
+import { MarkdownProvider, useMarkdown } from './context/MarkdownContext';
+
+// for syntax highlighting and styling
 import rehypeRaw from 'rehype-raw';
 import rehypeHighlight from 'rehype-highlight';
 import remarkGfm from 'remark-gfm';
-import { MarkdownProvider, useMarkdown } from './context/MarkdownContext';
+
+// for headings
 import Headings from './components/Headings';
 import Text from './components/Text';
 import Lists from './components/Lists';
@@ -11,15 +19,16 @@ import CodeBlock from './components/CodeBlock';
 import Table from './components/Table';
 import Media from './components/Media';
 import TableOfContents from './components/TableOfContents';
-import 'highlight.js/styles/github-dark.css';
-
-
-// colours headings based on tailwind config and light/dark mode
-import '../../styles/markdown.css';
 import MermaidDiagram from './components/MermaidDiagram';
 import Math from './components/Math';
+
+// math and katex for latex
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+
+// colours headings based on tailwind config and light/dark mode
+import 'highlight.js/styles/github-dark.css';
+import '../../styles/markdown.css';
 
 export interface MarkdownRendererProps {
   content: string;
@@ -99,8 +108,8 @@ const MarkdownContentWrapper: React.FC<{ content: string; className?: string; sh
   const { hasEnoughSpaceForToc } = useMarkdown();
   const shouldShowToc = showToc && hasEnoughSpaceForToc;
 
-  console.log('shouldShowToc 2', shouldShowToc);
-  console.log('hasEnoughSpaceForToc 2', hasEnoughSpaceForToc);
+  // console.log('shouldShowToc 2', shouldShowToc);
+  // console.log('hasEnoughSpaceForToc 2', hasEnoughSpaceForToc);
 
   return (
     <div className="relative w-full">

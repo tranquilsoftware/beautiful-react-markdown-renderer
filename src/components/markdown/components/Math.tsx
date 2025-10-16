@@ -1,4 +1,3 @@
-import React from 'react';
 import { cn } from '../../../styles/colors';
 import 'katex/dist/katex.min.css';
 /**
