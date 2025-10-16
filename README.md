@@ -402,6 +402,34 @@ beautiful-react-markdown-renderer/
 └── vite.config.ts
 ```
 
+### Working with Markdown Files
+
+1. **Adding New Posts**:
+   - Place your markdown files in the `public/posts/` directory
+   - Use YAML frontmatter for metadata (title, date, tags, etc.)
+   - Example post structure:
+     ```markdown
+     ---
+     title: "Your Post Title"
+     date: "2024-01-15"
+     tags: ["tutorial", "react"]
+     ---
+     
+     # Your Markdown Content Here
+     ```
+
+2. **Importing Posts**:
+   The application automatically imports markdown files using Vite's glob import:
+   ```typescript
+   const markdownModules = import.meta.glob('../../../../public/posts/*.md', { as: 'raw' });
+   ```
+   
+   To modify the markdown location, update the import path in `[slug].tsx` accordingly.
+
+3. **Hot Reloading**:
+   - Changes to markdown files are automatically detected in development
+   - No server restart needed when adding or modifying posts
+
 ## 📚 API Reference
 
 ### MarkdownRenderer Props
